@@ -11,7 +11,6 @@ A simple, static web tool for generating and debugging FSLogix `redirections.xml
 - **Import/Parse** - Paste existing XML to edit and debug
 - **Download** - Export as `redirections.xml` file
 - **Copy to Clipboard** - Quick copy of generated XML
-- **Persistent Storage** - Saves your work in browser localStorage
 - **Offline Ready** - No internet connection required
 
 ## Usage
