@@ -1,0 +1,230 @@
+<!--
+  FSLogix Redirections.xml Generator
+  Copyright (c) 2026 All Rights Reserved
+  See LICENSE file for usage terms
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSLogix Redirections.xml Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>FSLogix Redirections.xml Generator</h1>
+                <p>Create and debug FSLogix folder redirections</p>
+            </div>
+            <div class="header-right">
+                <button type="button" class="btn btn-small" id="themeToggleBtn" title="Toggle theme">🌙 Dark</button>
+            </div>
+        </header>
+
+        <main>
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Redirections List</h2>
+                    <div class="header-actions">
+                        <input type="text" id="redirectionsFilter" class="filter-input" placeholder="Filter..." title="Filter redirections by path">
+                        <select id="sortSelect" class="sort-select" title="Sort redirections">
+                            <option value="">Sort by...</option>
+                            <option value="type">Type (Exclude first)</option>
+                            <option value="path">Path (A-Z)</option>
+                            <option value="copy">Copy Flag</option>
+                            <option value="comment">Comment</option>
+                        </select>
+                        <button type="button" class="btn btn-small sort-order-btn" id="sortOrderBtn" title="Toggle sort order">↑</button>
+                        <div class="view-toggle">
+                            <button type="button" class="btn btn-small" id="viewRegularBtn" title="Regular view">Regular</button>
+                            <button type="button" class="btn btn-small" id="viewCompactBtn" title="Compact view">Compact</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="help-toggle">
+                    <span class="help-summary">
+                        <span class="badge badge-exclude">Exclude</span> = Not in VHD &nbsp;|&nbsp;
+                        <span class="badge badge-include">Include</span> = In VHD &nbsp;|&nbsp;
+                        <span class="badge badge-copy-0">0</span> Empty &nbsp;
+                        <span class="badge badge-copy-1">1</span> FROM &nbsp;
+                        <span class="badge badge-copy-2">2</span> TO &nbsp;
+                        <span class="badge badge-copy-3">3</span> Both
+                        <button type="button" class="btn-expand" id="helpToggleBtn">▼ More</button>
+                    </span>
+                </div>
+                <div class="help-details" id="helpDetails">
+                    <div class="help-section">
+                        <h4>Redirection Type (Flags)</h4>
+                        <div class="help-item">
+                            <span class="badge badge-exclude">Exclude (1)</span>
+                            <p>Folder is <strong>not copied</strong> to/from the VHD(X). Use for cache folders, temp files, and data you don't want in the profile. The folder stays on the local machine.</p>
+                        </div>
+                        <div class="help-item">
+                            <span class="badge badge-include">Include (2)</span>
+                            <p>Folder <strong>is copied</strong> to/from the VHD(X). Use to explicitly include folders that might otherwise be excluded by parent rules. <em>Copy attribute is not available for Include.</em></p>
+                        </div>
+                    </div>
+                    <div class="help-section">
+                        <h4>Copy Attribute (Excludes Only)</h4>
+                        <p class="help-intro">Controls how FSLogix handles files during redirection to the local_%username% directory.</p>
+                        <table class="help-table">
+                            <thead>
+                                <tr>
+                                    <th>Copy</th>
+                                    <th>Behavior</th>
+                                    <th>Use Case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge badge-copy-0">0</span></td>
+                                    <td>Creates <strong>empty folder</strong>. No files copied. Data written during session is removed at sign-out.</td>
+                                    <td>Cache folders that regenerate (most common)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-copy-1">1</span></td>
+                                    <td>Copies files <strong>FROM</strong> container at sign-in. New data is lost at sign-out.</td>
+                                    <td>Need existing data but don't want to save changes</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-copy-2">2</span></td>
+                                    <td>Starts empty, copies data <strong>TO</strong> container at sign-out.</td>
+                                    <td>⚠️ Use only if directed by Microsoft support</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge badge-copy-3">3</span></td>
+                                    <td>Copies <strong>FROM</strong> at sign-in, copies <strong>TO</strong> at sign-out (combines 1+2).</td>
+                                    <td>Full sync: preserve existing + save new data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="help-note">
+                            <strong>💡 Tip:</strong> Copy 0 is most common for reducing profile size. Omitting Copy attribute is the same as using 0.
+                        </div>
+                    </div>
+                </div>
+                <div id="redirectionsList" class="redirections-list">
+                    <p class="empty-state">No redirections added yet</p>
+                </div>
+                <div class="add-new-row">
+                    <button type="button" class="btn btn-small btn-primary" id="addNewBtn">+ Add New Redirection</button>
+                    <button type="button" class="btn btn-small" id="bulkInsertBtn">Bulk Insert</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>Quick Community Exclusions/Inclusions</h2>
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-small btn-success" id="addAllQuickBtn" title="Add all community redirections">+ All</button>
+                        <button type="button" class="btn btn-small btn-danger" id="removeAllQuickBtn" title="Remove all community redirections">− All</button>
+                        <input type="text" id="quickAddFilter" class="filter-input" placeholder="Filter..." title="Filter quick add buttons">
+                        <button type="button" class="btn btn-tiny" id="toggleQuickAddPaths" title="Show/hide paths">ℹ</button>
+                    </div>
+                </div>
+                <div id="quickAddContainer" class="quick-add">
+                    <!-- Buttons generated from community.js -->
+                </div>
+            </section>
+
+            <!-- Inline Add Form (hidden by default) -->
+            <section class="panel" id="addFormPanel" style="display:none;">
+                <h2>Add Redirection</h2>
+                <form id="addForm">
+                    <div class="form-row">
+                        <div class="form-group flex-grow">
+                            <label for="folderPath">Folder Path</label>
+                            <input type="text" id="folderPath" placeholder="e.g., AppData\Local\Microsoft\Teams" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="redirectType">Type</label>
+                            <select id="redirectType">
+                                <option value="1">Exclude</option>
+                                <option value="2">Include</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="copyFlags">Copy</label>
+                            <select id="copyFlags">
+                                <option value="">None (same as 0)</option>
+                                <option value="0">0 - Empty folder, no copy</option>
+                                <option value="1">1 - Copy FROM container</option>
+                                <option value="2">2 - Copy TO container</option>
+                                <option value="3">3 - Copy FROM and TO</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add</button>
+                        <button type="button" class="btn" id="cancelAddBtn">Cancel</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Bulk Insert Panel (hidden by default) -->
+            <section class="panel" id="bulkInsertPanel" style="display:none;">
+                <h2>Bulk Insert</h2>
+                <p class="help-text">Enter one path per line. All will be added as Excludes (Copy=0). You can change type and copy flag after adding.</p>
+                <textarea id="bulkInput" placeholder="AppData\Local\Microsoft\Teams\nAppData\Local\Temp\nAppData\Local\Google\Chrome\User Data\Default\Cache"></textarea>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-primary" id="bulkAddBtn">Add All</button>
+                    <button type="button" class="btn" id="cancelBulkBtn">Cancel</button>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2>XML Output</h2>
+                    <div class="xml-actions">
+                        <button type="button" class="btn btn-small" id="copyBtn">Copy</button>
+                        <button type="button" class="btn btn-small" id="downloadBtn">Download</button>
+                        <button type="button" class="btn btn-small btn-danger" id="clearBtn">Clear All</button>
+                    </div>
+                </div>
+                <textarea id="xmlOutput" readonly></textarea>
+            </section>
+
+            <section class="panel collapsible collapsed" id="importPanel">
+                <div class="panel-header collapsible-header" id="importToggle">
+                    <h2>Import/Debug XML</h2>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                <div class="collapsible-content">
+                    <div class="editor-container">
+                        <div class="gutter">
+                            <div class="gutter-inner" id="xmlGutter"></div>
+                        </div>
+                        <textarea id="xmlInput" class="xml-input" placeholder="Paste existing redirections.xml content here to parse and edit..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn" id="syntaxCheckBtn">Syntax Check</button>
+                        <button type="button" class="btn btn-primary" id="parseBtn">Parse &amp; Import</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity Log Section -->
+            <section class="panel" id="activityLogPanel">
+                <div class="panel-header">
+                    <h2>Activity Log</h2>
+                    <div class="header-actions">
+                        <button type="button" class="btn btn-small btn-danger" id="clearLogBtn" title="Clear all messages">Clear</button>
+                    </div>
+                </div>
+                <div id="activityLog" class="activity-log">
+                    <p class="empty-state">No activity yet</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>FSLogix Redirections.xml Generator - No external dependencies</p>
+        </footer>
+    </div>
+
+    <script src="community.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
