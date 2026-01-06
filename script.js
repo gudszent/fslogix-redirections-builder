@@ -728,28 +728,53 @@
         const excludes = redirections.filter(r => r.type === '1');
         const includes = redirections.filter(r => r.type === '2');
 
+        // Helper to group items by comment and generate XML
+        function generateGroupedEntries(items, tagName, includeCopyAttr) {
+            let result = '';
+            let lastComment = null;
+            let isFirstGroup = true;
+
+            items.forEach((r, index) => {
+                const comment = r.comment || '';
+                
+                // Check if comment changed (new group)
+                if (comment !== lastComment) {
+                    // Add 2 blank lines before new group (except for the first group)
+                    if (!isFirstGroup) {
+                        result += '\n\n';
+                    }
+                    isFirstGroup = false;
+                    
+                    // Add comment only once per group (if there is a comment)
+                    if (comment) {
+                        result += `  <!-- ${escapeXml(comment)} -->\n`;
+                    }
+                    lastComment = comment;
+                }
+                
+                // Add the entry
+                if (includeCopyAttr) {
+                    const copyAttr = r.copyFlags !== '' ? r.copyFlags : '0';
+                    result += `  <${tagName} Copy="${copyAttr}">${escapeXml(r.path)}</${tagName}>\n`;
+                } else {
+                    result += `  <${tagName}>${escapeXml(r.path)}</${tagName}>\n`;
+                }
+            });
+
+            return result;
+        }
+
         let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
         xml += '<FrxProfileFolderRedirection ExcludeCommonFolders="0">\n';
         
         // Excludes section
         xml += '<Excludes>\n';
-        excludes.forEach(r => {
-            if (r.comment) {
-                xml += `  <!-- ${escapeXml(r.comment)} -->\n`;
-            }
-            const copyAttr = r.copyFlags !== '' ? r.copyFlags : '0';
-            xml += `  <Exclude Copy="${copyAttr}">${escapeXml(r.path)}</Exclude>\n`;
-        });
+        xml += generateGroupedEntries(excludes, 'Exclude', true);
         xml += '</Excludes>\n';
         
         // Includes section
         xml += '<Includes>\n';
-        includes.forEach(r => {
-            if (r.comment) {
-                xml += `  <!-- ${escapeXml(r.comment)} -->\n`;
-            }
-            xml += `  <Include>${escapeXml(r.path)}</Include>\n`;
-        });
+        xml += generateGroupedEntries(includes, 'Include', false);
         xml += '</Includes>\n';
         
         xml += '</FrxProfileFolderRedirection>';
