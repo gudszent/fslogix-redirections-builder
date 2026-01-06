@@ -20,7 +20,7 @@ A simple, static web tool for generating and debugging FSLogix `redirections.xml
 
 1. Fork or clone this repository
 2. Enable GitHub Pages in repository settings
-3. Access at [`https://gudszent.github.io/fslogix-redirections-builder`](https://gudszent.github.io/fslogix-redirections-builder){target="_blank"}
+3. Access at [`https://gudszent.github.io/fslogix-redirections-builder`](https://gudszent.github.io/fslogix-redirections-builder)
 
 ### Local
 
