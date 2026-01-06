@@ -2,6 +2,8 @@
 
 A simple, static web tool for generating and debugging FSLogix `redirections.xml` files.
 
+![FSLogix Redirections Builder](./images/screenshot.png)
+
 ## Features
 
 - **Generate XML** - Add folder redirections with proper FSLogix format
@@ -18,7 +20,7 @@ A simple, static web tool for generating and debugging FSLogix `redirections.xml
 
 1. Fork or clone this repository
 2. Enable GitHub Pages in repository settings
-3. Access at
+3. Access at [`https://gudszent.github.io/fslogix-redirections-builder`](https://gudszent.github.io/fslogix-redirections-builder){target="_blank"}
 
 ### Local
 
@@ -58,6 +60,7 @@ Simply open `index.html` in any modern browser.
 ## Deployment Location
 
 Place the generated `redirections.xml` in:
+
 ```
 \\<server>\<share>\redirections.xml
 ```
@@ -67,6 +70,7 @@ Or configure via Group Policy/Registry.
 ## No Dependencies
 
 This tool is completely self-contained:
+
 - No JavaScript frameworks
 - No CSS frameworks
 - No external fonts or icons
