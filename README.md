@@ -79,6 +79,6 @@ This tool is completely self-contained:
 
 ## License
 
-This repository is distributed under MITlicense.
+This repository is distributed under MIT license.
 
 See `LICENSE` for details.
