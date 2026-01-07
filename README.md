@@ -79,4 +79,6 @@ This tool is completely self-contained:
 
 ## License
 
-MIT
+This repository is distributed under a custom license. The `LICENSE` file contains the full terms and includes restrictions on commercial use.
+
+See `LICENSE` for details.
