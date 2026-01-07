@@ -1,17 +1,19 @@
 # FSLogix Redirections.xml Generator
 
-A simple, static web tool for generating and debugging FSLogix `redirections.xml` files.
+A simple, static web tool for generating and debugging FSLogix `redirections.xml` files. Its main purpose is to help users create a valid XML structure for folder redirections used with FSLogix Profile Containers. Another goal is to collect common folder redirection use cases in one place, share them with the community, and encourage others to contribute their own.
+
+If you have suggestions or improvements, please open an issue or pull request, or contact me directly.
 
 ![FSLogix Redirections Builder](./images/screenshot.png)
 
 ## Features
 
 - **Generate XML** - Add folder redirections with proper FSLogix format
-- **Quick Add** - Common exclusions (Teams, Outlook, Chrome cache, etc.)
+- **Quick Community Add** - Common exclusions (Teams, Outlook, Chrome cache, etc.) from Community Contributions
 - **Import/Parse** - Paste existing XML to edit and debug
 - **Download** - Export as `redirections.xml` file
 - **Copy to Clipboard** - Quick copy of generated XML
-- **Offline Ready** - No internet connection required
+- **Offline Ready** - No internet connection required, I don't want your data
 
 ## Usage
 
@@ -27,7 +29,7 @@ Simply open `index.html` in any modern browser.
 
 ## FSLogix Redirections Reference
 
-### Flags (Type)
+### Type
 
 | Value | Description |
 |-------|-------------|
@@ -36,11 +38,12 @@ Simply open `index.html` in any modern browser.
 
 ### CopyBase
 
-| Value | Description |
-|-------|-------------|
-| 0 | No flags |
-| 1 | Copy base directory only |
-| 2 | Copy base and subdirectories |
+| Copy | Behavior | Use Case |
+|------|----------|----------|
+| 0 | Creates empty folder. No files copied. Data written during session is removed at sign-out. | Cache folders that regenerate (most common) |
+| 1 | Copies files FROM container at sign-in. New data is lost at sign-out. | Need existing data but don't want to save changes |
+| 2 | Starts empty, copies data TO container at sign-out. | ⚠️ **Use only if directed by Microsoft support** |
+| 3 | Copies FROM at sign-in, copies TO at sign-out (combines 1+2). | Full sync: preserve existing + save new data |
 
 ### Example XML Output
 
