@@ -19,9 +19,7 @@ If you have suggestions or improvements, please open an issue or pull request, o
 
 ### GitHub Pages
 
-1. Fork or clone this repository
-2. Enable GitHub Pages in repository settings
-3. Access at [`https://gudszent.github.io/fslogix-redirections-builder`](https://gudszent.github.io/fslogix-redirections-builder)
+Access at [`https://gudszent.github.io/fslogix-redirections-builder`](https://gudszent.github.io/fslogix-redirections-builder)
 
 ### Local
 
